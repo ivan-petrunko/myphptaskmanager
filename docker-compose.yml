@@ -1,0 +1,26 @@
+version: '3.3'
+
+volumes:
+    logs:
+        driver: local
+
+services:
+    php:
+        build: ./docker/images/php
+        links:
+            - mysql
+        volumes:
+            - .:/var/www
+            - ./var/logs/app:/var/log/app
+        environment:
+            docker: "true"
+        ports:
+            - 81:80
+    mysql:
+        image: mysql:5.7
+        ports:
+            - "$DB_PORT:3306"
+        volumes:
+            - ./var/lib/mysql:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: "$DB_PASSWORD"
